@@ -10,7 +10,7 @@ const camerasSelect = document.getElementById("cameras");
 
 let myStream;
 let muted = false;
-let cameraOff = true;
+let cameraOff = false;
 
 async function getCameras() {
   try {
@@ -91,12 +91,12 @@ function handleMessageSubmit(event) {
   input.value = "";
 }
 
-function handleNicknameSubmit(event){
-  event.preventDefault();
-  const input = room.querySelector("#name input");
-  const value = input.value;
-  socket.emit("nickname", input.value);
-}
+// function handleNicknameSubmit(event){
+//   event.preventDefault();
+//   const input = room.querySelector("#name input");
+//   const value = input.value;
+//   socket.emit("nickname", input.value);
+// }
 
 function showRoom() {
   welcome.hidden = true;
@@ -104,9 +104,9 @@ function showRoom() {
   const h3 = room.querySelector("h3");
   h3.innerText = `Room ${roomName}`;
   const msgForm = room.querySelector("#msg");
-  const nameForm = room.querySelector("#name");
+  // const nameForm = room.querySelector("#name");
   msgForm.addEventListener("submit", handleMessageSubmit);
-  nameForm.addEventListener("submit", handleNicknameSubmit);
+  // nameForm.addEventListener("submit", handleNicknameSubmit);
 }
 
 function handleRoomSubmit(event) {
@@ -131,11 +131,11 @@ socket.on("bye", (left, newCount) => {
   addMessage(`${left} 이 떠났습니다.`);
 });
 
-// socket.on("myself", (user, newCount) => {
-//   const h3 = room.querySelector("h3");
-//   h3.innerText = `Room ${roomName} (${newCount})`
-//   addMessage(`${user} 이 입장하였습니다.`);
-// });
+socket.on("myself", (user, newCount) => {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${newCount})`
+  addMessage(`${user} 이 입장하였습니다.`);
+});
 
 socket.on("new_message", addMessage);
 
